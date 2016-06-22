@@ -23,6 +23,7 @@
 #include <usAny.h>
 #include <usLDAPFilter.h>
 #include <usLDAPProp.h>
+#include <usServiceProperties.h>
 
 #include "usTestingMacros.h"
 

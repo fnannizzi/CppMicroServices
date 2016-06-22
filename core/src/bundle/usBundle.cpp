@@ -244,7 +244,7 @@ BundleVersion Bundle::GetVersion() const
   return d->version;
 }
 
-std::map<std::string, Any> Bundle::GetProperties() const
+std::unordered_map<std::string, Any> Bundle::GetProperties() const
 {
   return d->bundleManifest.GetProperties();
 }

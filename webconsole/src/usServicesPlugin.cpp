@@ -172,8 +172,8 @@ std::string ServicesPlugin::GetInterface_JSON(const std::string& iid) const
   {
     std::vector<std::string> keys;
     iter->GetPropertyKeys(keys);
-    Any propsAny = std::map<std::string, Any>();
-    std::map<std::string, Any>& props = ref_any_cast<std::map<std::string, Any> >(propsAny);
+    Any propsAny = std::unordered_map<std::string, Any>();
+    std::unordered_map<std::string, Any>& props = ref_any_cast<std::unordered_map<std::string, Any> >(propsAny);
     for (std::vector<std::string>::const_iterator keyIter = keys.begin(), keyEndIter = keys.end();
          keyIter != keyEndIter; ++keyIter)
     {

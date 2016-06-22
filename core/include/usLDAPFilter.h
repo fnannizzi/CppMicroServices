@@ -23,7 +23,8 @@
 #ifndef USLDAPFILTER_H
 #define USLDAPFILTER_H
 
-#include "usServiceProperties.h"
+#include <usCoreExport.h>
+#include <unordered_map>
 
 #include "usSharedData.h"
 
@@ -37,6 +38,7 @@ namespace us {
 class LDAPFilterData;
 class ServiceReferenceBase;
 class Bundle;
+class Any;
 
 /**
  * \ingroup MicroServices
@@ -78,8 +80,8 @@ public:
 
   /**
    * Creates a <code>LDAPFilter</code> object. This <code>LDAPFilter</code>
-   * object may be used to match a <code>ServiceReference</code> object or a
-   * <code>ServiceProperties</code> object.
+   * object may be used to match a <code>ServiceReference</code> object, a
+   * <code>Bundle</code> object, or a <code>std::unordered_map<std::string, Any></code> object.
    *
    * <p>
    * If the filter cannot be parsed, an std::invalid_argument will be
@@ -128,28 +130,28 @@ public:
   bool Match(const Bundle& bundle) const;
   
   /**
-   * Filter using a <code>ServiceProperties</code> object with case insensitive key lookup. This
-   * <code>LDAPFilter</code> is executed using the specified <code>ServiceProperties</code>'s keys
+   * Filter using a <code>std::unordered_map<std::string, Any></code> object with case insensitive key lookup. This
+   * <code>LDAPFilter</code> is executed using the specified <code>std::unordered_map<std::string, Any></code>'s keys
    * and values. The keys are looked up in a case insensitive manner.
    *
-   * @param dictionary The <code>ServiceProperties</code> whose key/value pairs are used
+   * @param dictionary The <code>std::unordered_map<std::string, Any></code> whose key/value pairs are used
    *        in the match.
-   * @return <code>true</code> if the <code>ServiceProperties</code>'s values match this
+   * @return <code>true</code> if the <code>std::unordered_map<std::string, Any></code>'s values match this
    *         filter; <code>false</code> otherwise.
    */
-  bool Match(const ServiceProperties& dictionary) const;
+  bool Match(const std::unordered_map<std::string, Any>& dictionary) const;
 
   /**
-   * Filter using a <code>ServiceProperties</code>. This <code>LDAPFilter</code> is executed using
-   * the specified <code>ServiceProperties</code>'s keys and values. The keys are looked
+   * Filter using a <code>std::unordered_map<std::string, Any></code>. This <code>LDAPFilter</code> is executed using
+   * the specified <code>std::unordered_map<std::string, Any></code>'s keys and values. The keys are looked
    * up in a normal manner respecting case.
    *
-   * @param dictionary The <code>ServiceProperties</code> whose key/value pairs are used
+   * @param dictionary The <code>std::unordered_map<std::string, Any></code> whose key/value pairs are used
    *        in the match.
-   * @return <code>true</code> if the <code>ServiceProperties</code>'s values match this
+   * @return <code>true</code> if the <code>std::unordered_map<std::string, Any></code>'s values match this
    *         filter; <code>false</code> otherwise.
    */
-  bool MatchCase(const ServiceProperties& dictionary) const;
+  bool MatchCase(const std::unordered_map<std::string, Any>& dictionary) const;
 
   /**
    * Returns this <code>LDAPFilter</code>'s filter string.

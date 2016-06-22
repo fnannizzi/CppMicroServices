@@ -39,7 +39,7 @@ DEALINGS IN THE SOFTWARE.
 #include <vector>
 #include <list>
 #include <set>
-#include <map>
+#include <unordered_map>
 #include <memory>
 
 #include <usCoreConfig.h>
@@ -146,16 +146,16 @@ std::string any_value_to_json(const std::set<E>& s)
 }
 
 template<class M>
-std::string any_value_to_string(const std::map<M, Any>& m);
+std::string any_value_to_string(const std::unordered_map<M, Any>& m);
 
 template<class K, class V>
-std::string any_value_to_string(const std::map<K, V>& m);
+std::string any_value_to_string(const std::unordered_map<K, V>& m);
 
 template<class M>
-std::string any_value_to_json(const std::map<M, Any>& m);
+std::string any_value_to_json(const std::unordered_map<M, Any>& m);
 
 template<class K, class V>
-std::string any_value_to_json(const std::map<K, V>& m);
+std::string any_value_to_json(const std::unordered_map<K, V>& m);
 
 
 /**
@@ -533,11 +533,11 @@ const ValueType* unsafe_any_cast(const Any* operand)
 
 
 template<class K>
-std::string any_value_to_string(const std::map<K, Any>& m)
+std::string any_value_to_string(const std::unordered_map<K, Any>& m)
 {
   std::stringstream ss;
   ss << "{";
-  typedef typename std::map<K, Any>::const_iterator Iterator;
+  typedef typename std::unordered_map<K, Any>::const_iterator Iterator;
   Iterator i1 = m.begin();
   const Iterator begin = i1;
   const Iterator end = m.end();
@@ -551,11 +551,11 @@ std::string any_value_to_string(const std::map<K, Any>& m)
 }
 
 template<class K, class V>
-std::string any_value_to_string(const std::map<K, V>& m)
+std::string any_value_to_string(const std::unordered_map<K, V>& m)
 {
   std::stringstream ss;
   ss << "{";
-  typedef typename std::map<K, V>::const_iterator Iterator;
+  typedef typename std::unordered_map<K, V>::const_iterator Iterator;
   Iterator i1 = m.begin();
   const Iterator begin = i1;
   const Iterator end = m.end();
@@ -569,11 +569,11 @@ std::string any_value_to_string(const std::map<K, V>& m)
 }
 
 template<class K>
-std::string any_value_to_json(const std::map<K, Any>& m)
+std::string any_value_to_json(const std::unordered_map<K, Any>& m)
 {
   std::stringstream ss;
   ss << "{";
-  typedef typename std::map<K, Any>::const_iterator Iterator;
+  typedef typename std::unordered_map<K, Any>::const_iterator Iterator;
   Iterator i1 = m.begin();
   const Iterator begin = i1;
   const Iterator end = m.end();
@@ -587,11 +587,11 @@ std::string any_value_to_json(const std::map<K, Any>& m)
 }
 
 template<class K, class V>
-std::string any_value_to_json(const std::map<K, V>& m)
+std::string any_value_to_json(const std::unordered_map<K, V>& m)
 {
   std::stringstream ss;
   ss << "{";
-  typedef typename std::map<K, V>::const_iterator Iterator;
+  typedef typename std::unordered_map<K, V>::const_iterator Iterator;
   Iterator i1 = m.begin();
   const Iterator begin = i1;
   const Iterator end = m.end();

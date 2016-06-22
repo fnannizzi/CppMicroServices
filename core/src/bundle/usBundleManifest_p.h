@@ -29,7 +29,7 @@ namespace us {
 
 class BundleManifest
 {
-  typedef std::map<std::string, Any> AnyMap;
+  typedef std::unordered_map<std::string, Any> AnyMap;
 
 public:
 

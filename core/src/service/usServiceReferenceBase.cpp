@@ -23,6 +23,7 @@
 #include "usServiceReferenceBase.h"
 #include "usServiceReferenceBasePrivate.h"
 #include "usServiceRegistrationBasePrivate.h"
+#include "usServiceProperties.h"
 
 #include "usBundle.h"
 #include "usBundlePrivate.h"

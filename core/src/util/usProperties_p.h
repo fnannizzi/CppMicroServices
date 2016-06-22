@@ -28,7 +28,6 @@
 #include <string>
 
 #include "usAny.h"
-#include "usServiceProperties.h"
 #include "usThreads_p.h"
 
 namespace us {
@@ -38,8 +37,7 @@ class Properties : public MultiThreaded<>
 
 public:
 
-  explicit Properties(const ServiceProperties& props);
-  Properties(const std::map<std::string, Any>& p);
+  explicit Properties(const std::unordered_map<std::string, Any>& props);
 
   Properties(Properties&& o);
   Properties& operator=(Properties&& o);

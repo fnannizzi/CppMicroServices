@@ -94,7 +94,7 @@ void WebConsolePluginTracker::AddPlugin(const std::string& label, AbstractWebCon
   plugin->Init(PluginConfig(m_ServletContext));
   m_Plugins[label] = plugin;
 
-  std::map<std::string, Any> menuItem;
+  std::unordered_map<std::string, Any> menuItem;
   menuItem["label"] = label;
   menuItem["href"] = label;
   menuItem["current"] = false;
@@ -104,12 +104,12 @@ void WebConsolePluginTracker::AddPlugin(const std::string& label, AbstractWebCon
 
 WebConsolePluginTracker::WebConsolePluginTracker()
   : ServiceTracker<HttpServlet>(GetBundleContext())
-  , m_LabelMapAny(std::map<std::string, Any>())
+  , m_LabelMapAny(std::unordered_map<std::string, Any>())
   , m_Labels(nullptr)
   , m_ServletContext(nullptr)
 {
-  ref_any_cast<std::map<std::string, Any> >(m_LabelMapAny)["menuItems"] = std::vector<Any>();
-  m_Labels = &ref_any_cast<std::vector<Any> >(ref_any_cast<std::map<std::string, Any> >(m_LabelMapAny)["menuItems"]);
+  ref_any_cast<std::unordered_map<std::string, Any> >(m_LabelMapAny)["menuItems"] = std::vector<Any>();
+  m_Labels = &ref_any_cast<std::vector<Any> >(ref_any_cast<std::unordered_map<std::string, Any> >(m_LabelMapAny)["menuItems"]);
 }
 
 void WebConsolePluginTracker::Open(const std::shared_ptr<ServletContext>& context)

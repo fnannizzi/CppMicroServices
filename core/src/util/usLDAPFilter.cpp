@@ -91,12 +91,12 @@ bool LDAPFilter::Match(const Bundle& bundle) const
   return d->ldapExpr.Evaluate(PropertiesHandle(Properties(bundle.GetProperties()), false), false);
 }
 
-bool LDAPFilter::Match(const ServiceProperties& dictionary) const
+bool LDAPFilter::Match(const std::unordered_map<std::string, Any>& dictionary) const
 {
   return d->ldapExpr.Evaluate(PropertiesHandle(Properties(dictionary), false), false);
 }
 
-bool LDAPFilter::MatchCase(const ServiceProperties& dictionary) const
+bool LDAPFilter::MatchCase(const std::unordered_map<std::string, Any>& dictionary) const
 {
   return d->ldapExpr.Evaluate(PropertiesHandle(Properties(dictionary), false), true);
 }

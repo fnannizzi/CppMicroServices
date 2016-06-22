@@ -114,24 +114,28 @@ int usAnyTest(int /*argc*/, char* /*argv*/[])
   US_TEST_CONDITION(anyListOfAnys.ToString() == "[1,hello]", "Any[std::list<Any>].ToString()")
   US_TEST_CONDITION(anyListOfAnys.ToJSON() == "[1,\"hello\"]", "Any[std::list<Any>].ToJSON()")
 
-  std::map<std::string, int> map1;
+  std::unordered_map<std::string, int> map1;
   map1["one"] = 1;
   map1["two"] = 2;
   Any anyMap1 = map1;
-  US_TEST_CONDITION(anyMap1.Type() == typeid(std::map<std::string, int>), "Any[std::map<std::string,int>].Type()")
-  US_TEST_CONDITION((any_cast<std::map<std::string, int> >(anyMap1) == map1), "any_cast<std::map<std::string,int>>()")
-  US_TEST_CONDITION(anyMap1.ToString() == "{one : 1, two : 2}", "Any[std::map<std::string,int>].ToString()")
-  US_TEST_CONDITION(anyMap1.ToJSON() == "{\"one\" : 1, \"two\" : 2}", "Any[std::map<std::string,int>].ToJSON()")
+  US_TEST_CONDITION(anyMap1.Type() == typeid(std::unordered_map<std::string, int>), "Any[std::unordered_map<std::string,int>].Type()")
+  US_TEST_CONDITION((any_cast<std::unordered_map<std::string, int> >(anyMap1) == map1), "any_cast<std::unordered_map<std::string,int>>()")
+  std::string anyMap1_ToString(anyMap1.ToString());
+  std::string anyMap1_ToJSON(anyMap1.ToJSON());
+  US_TEST_CONDITION((anyMap1_ToString == "{one : 1, two : 2}") || (anyMap1_ToString == "{two : 2, one : 1}"), "Any[std::unordered_map<std::string,int>].ToString()")
+  US_TEST_CONDITION((anyMap1_ToJSON == "{\"one\" : 1, \"two\" : 2}") || (anyMap1_ToJSON == "{\"two\" : 2, \"one\" : 1}"), "Any[std::unordered_map<std::string,int>].ToJSON()")
 
-  std::map<int, Any> map2;
+  std::unordered_map<int, Any> map2;
   map2[1] = 0.3;
   map2[3] = std::string("bye");
   Any anyMap2 = map2;
-  US_TEST_CONDITION(anyMap2.Type() == typeid(std::map<int, Any>), "Any[std::map<int,Any>].Type()")
-  US_TEST_CONDITION(anyMap2.ToString() == "{1 : 0.3, 3 : bye}", "Any[std::map<int,Any>].ToString()")
-  US_TEST_CONDITION(anyMap2.ToJSON() == "{\"1\" : 0.3, \"3\" : \"bye\"}", "Any[std::map<int,Any>].ToJSON()")
+  US_TEST_CONDITION(anyMap2.Type() == typeid(std::unordered_map<int, Any>), "Any[std::unordered_map<int,Any>].Type()")
+  std::string anyMap2_ToString(anyMap2.ToString());
+  std::string anyMap2_ToJSON(anyMap2.ToJSON());
+  US_TEST_CONDITION((anyMap2_ToString == "{1 : 0.3, 3 : bye}") || (anyMap2_ToString == "{3 : bye, 1 : 0.3}"), "Any[std::unordered_map<int,Any>].ToString()")
+  US_TEST_CONDITION((anyMap2_ToJSON == "{\"1\" : 0.3, \"3\" : \"bye\"}") || (anyMap2_ToJSON == "{\"3\" : \"bye\", \"1\" : 0.3}"), "Any[std::unordered_map<int,Any>].ToJSON()")
 
-  std::map<std::string, Any> map3;
+  std::unordered_map<std::string, Any> map3;
   map3["number"] = 5;
   std::vector<int> numbers;
   numbers.push_back(9);
@@ -140,9 +144,23 @@ int usAnyTest(int /*argc*/, char* /*argv*/[])
   map3["vector"] = numbers;
   map3["map"] = map2;
   Any anyMap3 = map3;
-  US_TEST_CONDITION(anyMap3.Type() == typeid(std::map<std::string, Any>), "Any[std::map<std::string,Any>].Type()")
-  US_TEST_CONDITION(anyMap3.ToString() == "{map : {1 : 0.3, 3 : bye}, number : 5, vector : [9,8,7]}", "Any[std::map<std::string,Any>].ToString()")
-  US_TEST_CONDITION(anyMap3.ToJSON() == "{\"map\" : {\"1\" : 0.3, \"3\" : \"bye\"}, \"number\" : 5, \"vector\" : [9,8,7]}", "Any[std::map<std::string,Any>].ToJSON()")
+  US_TEST_CONDITION(anyMap3.Type() == typeid(std::unordered_map<std::string, Any>), "Any[std::unordered_map<std::string,Any>].Type()")
+
+  std::string map3_ToString(anyMap3.ToString());
+  US_TEST_CONDITION((map3_ToString.find("map : {1 : 0.3, 3 : bye}") != std::string::npos) || (map3_ToString.find("map : {3 : bye, 1 : 0.3}") != std::string::npos),
+                    "Any[std::unordered_map<std::string,Any>].ToString() contains: map : {1 : 0.3, 3 : bye}   OR   map : {3 : bye, 1 : 0.3}");
+  US_TEST_CONDITION(map3_ToString.find("number : 5") != std::string::npos,
+                    "Any[std::unordered_map<std::string,Any>].ToString() contains: number : 5");
+  US_TEST_CONDITION(map3_ToString.find("vector : [9,8,7]") != std::string::npos,
+                    "Any[std::unordered_map<std::string,Any>].ToString() contains: vector : [9,8,7]");
+
+  std::string map3_ToJSON(anyMap3.ToJSON());
+  US_TEST_CONDITION((map3_ToJSON.find("\"map\" : {\"1\" : 0.3, \"3\" : \"bye\"}") != std::string::npos) || (map3_ToJSON.find("\"map\" : {\"3\" : \"bye\", \"1\" : 0.3}") != std::string::npos),
+                      "Any[std::unordered_map<std::string,Any>].ToJSON() contains: \"map\" : {\"1\" : 0.3, \"3\" : \"bye\"}   OR   \"map\" : {\"3\" : \"bye\", \"1\" : 0.3}");
+  US_TEST_CONDITION(map3_ToJSON.find("\"number\" : 5") != std::string::npos,
+                      "Any[std::unordered_map<std::string,Any>].ToJSON() contains: \"number\" : 5");
+  US_TEST_CONDITION(map3_ToJSON.find("\"vector\" : [9,8,7]") != std::string::npos,
+                      "Any[std::unordered_map<std::string,Any>].ToJSON() contains: \"vector\" : [9,8,7]");
 
   US_TEST_END()
 }

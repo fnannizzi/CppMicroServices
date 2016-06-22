@@ -30,7 +30,7 @@ namespace us {
 
 namespace {
 
-  typedef std::map<std::string, Any> AnyMap;
+  typedef std::unordered_map<std::string, Any> AnyMap;
   typedef std::vector<Any> AnyVector;
 
   void ParseJsonObject(const Json::Value& jsonObject, AnyMap& anyMap);

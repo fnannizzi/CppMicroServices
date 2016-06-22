@@ -28,7 +28,7 @@
 
 #include <vector>
 #include <memory>
-#include <map>
+#include <unordered_map>
 
 namespace us {
 
@@ -235,7 +235,7 @@ public:
    *
    * @sa \ref MicroServices_BundleProperties
    */
-  std::map<std::string, Any> GetProperties() const;
+  std::unordered_map<std::string, Any> GetProperties() const;
     
   /**
    * Returns the value of the specified property for this bundle.

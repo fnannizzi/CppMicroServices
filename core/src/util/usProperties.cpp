@@ -60,12 +60,7 @@ void Properties::ConstructProperties(const T& p)
   }
 }
 
-Properties::Properties(const ServiceProperties& p)
-{
-  ConstructProperties(p);
-}
-    
-Properties::Properties(const std::map<std::string, Any>& p)
+Properties::Properties(const std::unordered_map<std::string, Any>& p)
 {
   ConstructProperties(p);
 }

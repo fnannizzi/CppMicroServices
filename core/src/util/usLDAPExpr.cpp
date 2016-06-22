@@ -24,6 +24,7 @@
 
 #include "usAny.h"
 #include "usProperties_p.h"
+#include "usServiceProperties.h"
 
 #include <limits>
 #include <iterator>

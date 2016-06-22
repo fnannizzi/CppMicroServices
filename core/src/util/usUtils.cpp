@@ -64,15 +64,6 @@ std::string library_suffix()
 #endif
 }
 
-#ifdef US_PLATFORM_POSIX
-
-const char DIR_SEP = '/';
-
-#elif defined(US_PLATFORM_WINDOWS)
-
-const char DIR_SEP = '\\';
-
-#endif
 }
 
 namespace us {
