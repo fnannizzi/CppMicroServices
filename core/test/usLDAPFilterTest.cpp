@@ -28,6 +28,7 @@
 #include "usTestingMacros.h"
 
 #include <stdexcept>
+#include <chrono>
 
 using namespace us;
 
@@ -66,6 +67,15 @@ int TestParsing()
   return EXIT_SUCCESS;
 }
 
+bool doEvaluationTest(const char* description, const LDAPFilter &ldap, const ServiceProperties &props) {
+    US_TEST_OUTPUT(<< description << ldap.ToString())
+    std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
+    bool eval = ldap.Match(props);
+    std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
+    US_TEST_OUTPUT(<< " Query took " << std::chrono::duration_cast<std::chrono::nanoseconds>( t2 - t1 ).count() << " nanoseconds.")
+    return eval;
+}
+
 int TestEvaluate()
 {
   // EVALUATE
@@ -74,38 +84,45 @@ int TestEvaluate()
     // Make sure Match's key look-up is case-insensitive
     LDAPFilter ldap( "(Cn=Babs Jensen)" );
     ServiceProperties props;
-    bool eval = false;
 
     // Several values
     props["cn"] = std::string("Babs Jensen");
     props["unused"] = std::string("Jansen");
-    US_TEST_OUTPUT(<< "Evaluating expr: " << ldap.ToString())
-    eval = ldap.Match(props);
-    if (!eval)
+    if (!doEvaluationTest("First query is always slowest. Evaluating expr: ", ldap, props))
     {
-      return EXIT_FAILURE;
+        return EXIT_FAILURE;
+    }
+    if (!doEvaluationTest("Repeat of previous query. Evaluating expr: ", ldap, props))
+    {
+        return EXIT_FAILURE;
+    }
+
+    // Several more values
+    props["a_unused"] = std::string("Bubs Jensen");
+    props["b_unused"] = std::string("Jansenn");
+    props["c_unused"] = std::string("Bubsy");
+    props["d_unused"] = std::string("JanBubs");
+    if (!doEvaluationTest("Evaluating extra entries expr: ", ldap, props))
+    {
+        return EXIT_FAILURE;
     }
 
     // WILDCARD
     ldap = LDAPFilter( "(cn=Babs *)" );
     props.clear();
     props["cn"] = std::string("Babs Jensen");
-    US_TEST_OUTPUT(<< "Evaluating wildcard expr: " << ldap.ToString())
-    eval = ldap.Match(props);
-    if ( !eval )
+    if (!doEvaluationTest("Evaluating wildcard expr: ", ldap, props))
     {
-      return EXIT_FAILURE;
+        return EXIT_FAILURE;
     }
 
     // NOT FOUND
     ldap = LDAPFilter( "(cn=Babs *)" );
     props.clear();
     props["unused"] = std::string("New");
-    US_TEST_OUTPUT(<< "Expr not found test: " << ldap.ToString())
-    eval = ldap.Match(props);
-    if ( eval )
+    if (doEvaluationTest("Expr not found test: ", ldap, props))
     {
-      return EXIT_FAILURE;
+        return EXIT_FAILURE;
     }
 
     // std::vector with integer values
@@ -115,22 +132,18 @@ int TestEvaluate()
     list.push_back(std::string("Babs Jensen"));
     list.push_back(std::string("1"));
     props["sn"] = list;
-    US_TEST_OUTPUT(<< "Evaluating vector expr: " << ldap.ToString())
-    eval = ldap.Match(props);
-    if (!eval)
-    {
-      return EXIT_FAILURE;
+    if (!doEvaluationTest("Evaluating vector expr: ", ldap, props))
+    { 
+        return EXIT_FAILURE;
     }
 
     // wrong case
     ldap = LDAPFilter( "(cN=Babs *)" );
     props.clear();
     props["cn"] = std::string("Babs Jensen");
-    US_TEST_OUTPUT(<< "Evaluating case sensitive expr: " << ldap.ToString())
-    eval = ldap.MatchCase(props);
-    if (eval)
-    {
-      return EXIT_FAILURE;
+    if (!doEvaluationTest("Evaluating case sensitive expr: ", ldap, props))
+    { 
+        return EXIT_FAILURE;
     }
   }
   catch (const std::invalid_argument& e)
