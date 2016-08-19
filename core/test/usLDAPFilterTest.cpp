@@ -116,6 +116,36 @@ int TestEvaluate()
         return EXIT_FAILURE;
     }
 
+    // AND
+    ldap = LDAPFilter( "(&(cn=Babs *)(dn=Broc*))" );
+    props.clear();
+    props["cn"] = std::string("Babs Jensen");
+    props["dn"] = std::string("Brock Samson");
+    if (!doEvaluationTest("Evaluating and expr: ", ldap, props))
+    {
+        return EXIT_FAILURE;
+    }
+
+    // OR
+    ldap = LDAPFilter( "(|(cn=Babs *)(dn=Broc*))" );
+    props.clear();
+    props["cn"] = std::string("Bubs Bransen");
+    props["dn"] = std::string("Brock Samson");
+    if (!doEvaluationTest("Evaluating or expr: ", ldap, props))
+    {
+        return EXIT_FAILURE;
+    }
+
+    // NOT
+    ldap = LDAPFilter( "(!(cn=Broc*))" );
+    props.clear();
+    props["cn"] = std::string("Brock Brabsen");
+    props["cn"] = std::string("Brock Samson");
+    if (doEvaluationTest("Evaluating not expr: ", ldap, props))
+    {
+        return EXIT_FAILURE;
+    }
+
     // NOT FOUND
     ldap = LDAPFilter( "(cn=Babs *)" );
     props.clear();
